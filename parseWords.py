@@ -80,12 +80,13 @@ for message in mailbox.mbox('mail.mbox'):
         body = body.encode('ascii', 'ignore')
         body = body.lower()
 
+        # Removes any punctuation                                                               
         table = string.maketrans("","")
         body = body.translate(table, string.punctuation)
+
         
         # Split by any puncuiation, i.e. \r, \n, \t, ' '
         body = re.findall(r"[\w']+", body)
-
 
     except UnicodeEncodeError:
         print "UnicodeEncodeError!"
@@ -102,10 +103,15 @@ for message in mailbox.mbox('mail.mbox'):
 
     # Count for each word
     for word in body:
+        
         if word is None or word.find('0x') is not -1:
             word = None
+        if word is None or word.find('@') is not -1:
+            word = None
+
+        # Add words to word
         if word is not None and word.find("http") is -1:
-            if len(word) < 26 and len(word) > 2:
+            if len(word) < 21 and len(word) > 3:
                 word = re.sub(r'\d', '', word)
                 if word not in words:
                     words[word] = 1
@@ -124,7 +130,7 @@ for message in mailbox.mbox('mail.mbox'):
     else:
         dates[date] += 1
 
-writer.writerow("Word", "Count")
+writer.writerow(["Word", "Count"])
 for word in words:
     print word, words[word]
     writer.writerow([word.encode('utf8'), words[word]])
