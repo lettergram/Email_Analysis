@@ -62,8 +62,8 @@ def getbodyfromemail(msg):
 writer = csv.writer(open("wordFrequency.csv", "wb"))
 
 words = dict()
-dates = dict()
-days = dict()
+wordsYear = dict()
+wordsMonth = dict()
 
 emailCount = 0
 
@@ -100,6 +100,9 @@ for message in mailbox.mbox('mail.mbox'):
 
     print 'count: ', emailCount
     emailCount += 1
+    
+    day, month, year, date = parseDate(message['date'])
+
 
     # Count for each word
     for word in body:
@@ -112,25 +115,43 @@ for message in mailbox.mbox('mail.mbox'):
         # Add words to word
         if word is not None and word.find("http") is -1:
             if len(word) < 21 and len(word) > 3:
-                word = re.sub(r'\d', '', word)
+                word = re.sub(r'\d', '', word)                
                 if word not in words:
                     words[word] = 1
                 else:
                     words[word] += 1
 
-    # Count for each day
-    if day not in days:
-        days[day] = 1
-    else:
-        days[day] += 1
+                # Month associated with words
+                if month not in wordsMonth:
+                    wordsMonth[month] = dict()
+                if word not in wordsMonth[month]:
+                    wordsMonth[month][word] = 1
+                else:
+                    wordsMonth[month][word] += 1
 
-    # Count for each date
-    if date not in dates:
-        dates[date] = 1
-    else:
-        dates[date] += 1
+                # Year associated with words
+                if year not in wordsYear:
+                    wordsYear[year] = dict()
+                if word not in wordsYear[year]:
+                    wordsYear[year][word] = 1
+                else:
+                    wordsYear[year][word] += 1
+
 
 writer.writerow(["Word", "Count"])
 for word in words:
-    print word, words[word]
     writer.writerow([word.encode('utf8'), words[word]])
+
+# Writes the word frequency for every month
+for month in wordsMonth:
+    monthWriter = csv.writer(open("wordFrequency/" + month + "_wordFrequency.csv", "wb"))
+    monthWriter.writerow(["Word","Count"])
+    for word in wordsMonth[month]:
+        monthWriter.writerow([word.encode('utf8'), wordsMonth[month][word]])
+
+# Writes the word frequency for every year
+for year in wordsYear:
+    yearWriter = csv.writer(open("wordFrequency/" + year + "_wordFrequency.csv", "wb"))
+    yearWriter.writerow(["Word","Count"])
+    for word in wordsYear[year]:
+        yearWriter.writerow([word.encode('utf8'), wordsYear[year][word]])
