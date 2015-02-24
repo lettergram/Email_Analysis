@@ -3,9 +3,10 @@ import csv
 
 def parseDate(dateMessage):
     if dateMessage is None:
-        return "None", "None"
+        return "None", "None", "None", "None"
     fullDate = dateMessage.split(",")
     day = (fullDate[0]).lower()
+
     # Update days                                                                                  
     if day is None or len(day) < 1 or len(day) > 5 or day is "none":
         day = "None"
@@ -46,7 +47,14 @@ def parseDate(dateMessage):
     if date.find('-') is 1:
         date = "0" + date[:-1]
 
-    return day, date
+    splitDate = date.split('-')
+    month = "None"
+    year = "None"
+    if len(splitDate) > 2:
+      month = splitDate[1]
+      year = splitDate[2]
+
+    return day, month, year, date
 
 
 ''' ___MAIN___ '''
@@ -58,7 +66,7 @@ days = dict()
 
 for message in mailbox.mbox('mail.mbox'):
 
-    day, date = parseDate(message['date'])
+    day, month, year, date = parseDate(message['date'])
 
     # Count for each day
     if day not in days:
@@ -72,8 +80,10 @@ for message in mailbox.mbox('mail.mbox'):
     else:
         dates[date] += 1
 
+writer.writerow(["Date", "Count"])
 for date in dates:
     writer.writerow([date, dates[date]])
 
+dayWriter.writerow(["Day", "Count"])
 for day in days:
     dayWriter.writerow([day, days[day]])
