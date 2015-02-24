@@ -6,7 +6,7 @@ Ever wonder what was in your email?
 
 * Must place python scripts in the same folder as mbox
 * Rename .mbox as 'mail.mbox'
-* Create folder wordFrequency
+* Need folder wordFrequency (should be present)
 * Add name or any other words to skip to stdWords.csv
 * Run <filename>.py as desired
 * Wait ~2 minutes per Gb
