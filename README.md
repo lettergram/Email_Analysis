@@ -2,7 +2,7 @@ Email Meta Analysis
 =====
 Ever wonder what was in your email?
 
-[I did!](http://austingwalters.com/analyzing-email-data/)
+I did, so I wrote some python scripts to analyze it! [My email analysis](http://austingwalters.com/analyzing-email-data/)
 
 ## Usage
 
