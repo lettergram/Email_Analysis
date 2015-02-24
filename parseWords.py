@@ -56,6 +56,12 @@ def getbodyfromemail(msg):
              handleerror("AttributeError: encountered" ,msg,charset)
     return body    
 
+stdWords = []
+reader = csv.reader(open("stdWords.csv", "rb"))
+for row in reader:
+   stdWords.append(row[0]) 
+
+#stdWords = set(stdWords)
 
 ''' ___MAIN___ '''
 
@@ -79,6 +85,8 @@ for message in mailbox.mbox('mail.mbox'):
     try:
         body = body.encode('ascii', 'ignore')
         body = body.lower()
+
+        body = body.replace('@', 'zzz')
 
         # Removes any punctuation                                                               
         table = string.maketrans("","")
@@ -109,13 +117,13 @@ for message in mailbox.mbox('mail.mbox'):
         
         if word is None or word.find('0x') is not -1:
             word = None
-        if word is None or word.find('@') is not -1:
+        if word is None or word.find('zzz') is not -1:
             word = None
 
         # Add words to word
         if word is not None and word.find("http") is -1:
+            word = re.sub(r'\d', '', word)
             if len(word) < 21 and len(word) > 3:
-                word = re.sub(r'\d', '', word)                
                 if word not in words:
                     words[word] = 1
                 else:
@@ -140,18 +148,21 @@ for message in mailbox.mbox('mail.mbox'):
 
 writer.writerow(["Word", "Count"])
 for word in words:
-    writer.writerow([word.encode('utf8'), words[word]])
+    if word not in stdWords:
+        writer.writerow([word.encode('utf8'), words[word]])
 
 # Writes the word frequency for every month
 for month in wordsMonth:
     monthWriter = csv.writer(open("wordFrequency/" + month + "_wordFrequency.csv", "wb"))
     monthWriter.writerow(["Word","Count"])
     for word in wordsMonth[month]:
-        monthWriter.writerow([word.encode('utf8'), wordsMonth[month][word]])
+        if word not in stdWords:
+            monthWriter.writerow([word.encode('utf8'), wordsMonth[month][word]])
 
 # Writes the word frequency for every year
 for year in wordsYear:
     yearWriter = csv.writer(open("wordFrequency/" + year + "_wordFrequency.csv", "wb"))
     yearWriter.writerow(["Word","Count"])
     for word in wordsYear[year]:
-        yearWriter.writerow([word.encode('utf8'), wordsYear[year][word]])
+        if word not in stdWords:
+            yearWriter.writerow([word.encode('utf8'), wordsYear[year][word]])
