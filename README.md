@@ -2,6 +2,8 @@ Email Meta Analysis
 =====
 Ever wonder what was in your email?
 
+[I did!](http://austingwalters.com/analyzing-email-data/)
+
 ## Usage
 
 * Must place python scripts in the same folder as mbox
