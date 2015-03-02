@@ -4,7 +4,7 @@ Ever wonder what was in your email?
 
 I did, so I wrote some python scripts to analyze it! 
 
-[Check out my email analysis](http://austingwalters.com/analyzing-email-data/)
+You can check out the analysis of my own email [on my website](http://austingwalters.com/analyzing-email-data/)
 
 ## Usage
 
